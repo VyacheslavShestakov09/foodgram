@@ -11,24 +11,25 @@ services:
     env_file: .env
     volumes:
       - pg_data:/var/lib/postgresql/data
+    restart: unless-stopped
 
   backend:
-    build: ../backend
+    image: ${DOCKER_USERNAME}/foodgram_backend:latest
     env_file: .env
     volumes:
       - static:/app/static
       - media:/app/media
     depends_on:
-      - db
-    command: >
-      sh -c "python manage.py migrate --noinput &&
-             gunicorn --bind 0.0.0.0:8000 foodgram.wsgi"
+      db:
+        condition: service_healthy
+    command: gunicorn --bind 0.0.0.0:8000 foodgram.wsgi
+    restart: unless-stopped
 
   frontend:
-    build: ../frontend
+    image: ${DOCKER_USERNAME}/foodgram_frontend:latest
     volumes:
       - static:/static
-    restart: on-failure
+    restart: no
 
   gateway:
     image: nginx:latest
@@ -40,3 +41,4 @@ services:
       - "80:80"
     depends_on:
       - backend
+    restart: unless-stopped

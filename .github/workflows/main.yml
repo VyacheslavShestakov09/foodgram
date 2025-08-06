@@ -73,16 +73,14 @@ jobs:
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
+          key: ${{ secrets.SSH_KEY }}
           script: |
             cd ~/foodgram/infra
-            git pull origin main
             docker-compose -f docker-compose.prod.yml down
             docker-compose -f docker-compose.prod.yml pull
             docker-compose -f docker-compose.prod.yml up -d
             docker-compose -f docker-compose.prod.yml exec backend python manage.py migrate --noinput
             docker-compose -f docker-compose.prod.yml exec backend python manage.py collectstatic --noinput
-            docker-compose -f docker-compose.prod.yml exec backend chmod -R 755 /app/static
-            docker-compose -f docker-compose.prod.yml exec backend chmod -R 644 /app/static/*
 
   notify:
     runs-on: ubuntu-latest

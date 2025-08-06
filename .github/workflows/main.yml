@@ -75,9 +75,6 @@ jobs:
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd ~/foodgram
-            git fetch origin main
-            git checkout origin/main -- infra/docker-compose.prod.yml
             cd ~/foodgram/infra
             sudo docker-compose -f docker-compose.prod.yml down
             sudo docker-compose -f docker-compose.prod.yml pull

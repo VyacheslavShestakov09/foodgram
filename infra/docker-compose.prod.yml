@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 
 volumes:
   static:
@@ -11,6 +11,11 @@ services:
     env_file: .env
     volumes:
       - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     restart: unless-stopped
 
   backend:
@@ -22,8 +27,15 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    command: gunicorn --bind 0.0.0.0:8000 foodgram.wsgi
+    command: >
+      sh -c "python manage.py migrate --noinput &&
+             gunicorn --bind 0.0.0.0:8000 --workers 3 foodgram.wsgi"
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   frontend:
     image: ${DOCKER_USERNAME}/foodgram_frontend:latest
@@ -40,5 +52,11 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

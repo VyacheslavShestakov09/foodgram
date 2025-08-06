@@ -213,9 +213,8 @@ class BaseUserRecipeSerializer(serializers.ModelSerializer):
         """
         if data['user'] == data['recipe'].author:
             raise serializers.ValidationError(
-                f'Нельзя добавить свой рецепт в {
-                    self.Meta.model._meta.verbose_name
-                }'
+                f'Нельзя добавить свой рецепт в'
+                f'{self.Meta.model._meta.verbose_name}'
             )
         return data
 

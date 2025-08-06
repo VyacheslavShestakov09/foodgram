@@ -28,8 +28,7 @@ services:
       db:
         condition: service_healthy
     command: >
-      sh -c "python manage.py migrate --noinput &&
-             gunicorn --bind 0.0.0.0:8000 --workers 3 foodgram.wsgi"
+      sh -c "gunicorn --bind 0.0.0.0:8000 --workers 3 foodgram.wsgi"
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/api/"]
@@ -41,7 +40,10 @@ services:
     image: ${DOCKER_USERNAME}/foodgram_frontend:latest
     volumes:
       - static:/static
-    restart: no
+    command: sh -c "cp -r /app/build/* /static/"
+    depends_on:
+      - backend
+    restart: "no"
 
   gateway:
     image: nginx:latest

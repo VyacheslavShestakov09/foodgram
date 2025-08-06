@@ -75,11 +75,14 @@ jobs:
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
+            cd ~/foodgram
+            git fetch origin main
+            git checkout origin/main -- infra/docker-compose.prod.yml
             cd ~/foodgram/infra
             sudo docker-compose -f docker-compose.prod.yml down
             sudo docker-compose -f docker-compose.prod.yml pull
             sudo docker-compose -f docker-compose.prod.yml up -d
-            Sleep 10
+            sleep 10
             sudo docker-compose -f docker-compose.prod.yml exec backend python manage.py migrate --noinput
             sudo docker-compose -f docker-compose.prod.yml exec backend python manage.py collectstatic --noinput
 

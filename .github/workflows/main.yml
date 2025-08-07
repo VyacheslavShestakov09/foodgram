@@ -1,4 +1,4 @@
-name: Foodgram Deployment Pipeline
+name: Foodgram Deploy
 
 on:
   push:
@@ -64,24 +64,40 @@ jobs:
     runs-on: ubuntu-latest
     needs: build_and_push_to_docker_hub
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
       - name: Add SSH key
         uses: webfactory/ssh-agent@v0.7.0
         with:
           ssh-private-key: ${{ secrets.SSH_KEY }}
-      - name: Deploy to production server
+          
+      - name: Copy infra files to server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.SSH_KEY }}
+          source: "infra/"
+          target: "/home/yc-user/foodgram"
+          strip_components: 1
+          overwrite: true
+          
+      - name: Deploy containers
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd ~/foodgram/infra
+            cd /home/yc-user/foodgram/infra
             sudo docker-compose -f docker-compose.prod.yml down
             sudo docker-compose -f docker-compose.prod.yml pull
             sudo docker-compose -f docker-compose.prod.yml up -d
-            sleep 15
+            sleep 20
             sudo docker-compose -f docker-compose.prod.yml exec backend python manage.py migrate --noinput
             sudo docker-compose -f docker-compose.prod.yml exec backend python manage.py collectstatic --noinput
+            sudo docker system prune -af --volumes || true
 
   notify:
     runs-on: ubuntu-latest

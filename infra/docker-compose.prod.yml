@@ -40,7 +40,8 @@ services:
     image: ${DOCKER_USERNAME}/foodgram_frontend:latest
     volumes:
       - static:/static
-    command: sh -c "cp -r /app/build/* /static/"
+    command: >
+      sh -c "cp -r /app/build/* /static/ && rm -rf /static/static"
     depends_on:
       - backend
     restart: "no"

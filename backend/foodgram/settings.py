@@ -115,6 +115,10 @@ USE_TZ = True
 
 CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',')
 
+CSRF_COOKIE_SECURE = True
+
+SESSION_COOKIE_SECURE = True
+
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'static'
 

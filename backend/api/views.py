@@ -64,7 +64,7 @@ class UserViewSet(DjoserUserViewSet):
             return [AllowAny()]
         return super().get_permissions()
 
-    @action(['get'], detail=False, permission_classes=[IsAuthenticated] )
+    @action(['get'], detail=False, permission_classes=[IsAuthenticated])
     def me(self, request, *args, **kwargs):
         """Получение профиля текущего пользователя."""
         serializer = self.get_serializer(request.user)

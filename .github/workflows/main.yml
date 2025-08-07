@@ -80,7 +80,6 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           source: "infra/"
           target: "/home/yc-user/foodgram"
-          strip_components: 1
           overwrite: true
           
       - name: Deploy containers
@@ -91,13 +90,12 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd /home/yc-user/foodgram/infra
-            sudo docker-compose -f docker-compose.prod.yml down
+            sudo docker-compose -f docker-compose.prod.yml down || true
             sudo docker-compose -f docker-compose.prod.yml pull
             sudo docker-compose -f docker-compose.prod.yml up -d
             sleep 20
             sudo docker-compose -f docker-compose.prod.yml exec backend python manage.py migrate --noinput
             sudo docker-compose -f docker-compose.prod.yml exec backend python manage.py collectstatic --noinput
-            sudo docker system prune -af --volumes || true
 
   notify:
     runs-on: ubuntu-latest

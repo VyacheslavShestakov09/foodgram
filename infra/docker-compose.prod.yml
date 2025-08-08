@@ -33,10 +33,7 @@ services:
     image: ${DOCKER_USERNAME}/foodgram_frontend:latest
     volumes:
       - static:/static
-    entrypoint: ["/bin/sh", "-c"]
-    command: >
-      "cp -r /app/result_build/* /static &&
-       echo 'Статика скопирована.'"
+    command: ["sh", "-c", "cp -r /result_build/* /static && mv /static/static/* /static && rm -rf /static/static"
     restart: "no"
 
   gateway:
@@ -44,7 +41,7 @@ services:
     volumes:
       - static:/static
       - media:/media
-      - /etc/nginx/conf.d/foodgram.conf:/etc/nginx/conf.d/default.conf
+      - ./infra/nginx.conf:/etc/nginx/conf.d/default.conf
       - /etc/letsencrypt/live/projectfoodgram.ddns.net/fullchain.pem:/etc/nginx/ssl/fullchain.pem:ro
       - /etc/letsencrypt/live/projectfoodgram.ddns.net/privkey.pem:/etc/nginx/ssl/privkey.pem:ro
       - /etc/letsencrypt/options-ssl-nginx.conf:/etc/letsencrypt/options-ssl-nginx.conf:ro

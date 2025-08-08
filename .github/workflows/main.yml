@@ -56,10 +56,10 @@ jobs:
       - name: Build and push nginx image
         uses: docker/build-push-action@v4
         with:
-          context: infra/
+          context: .
+          file: infra/Dockerfile.nginx
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/foodgram_gateway:latest
-          file: infra/Dockerfile.nginx
 
   deploy:
     runs-on: ubuntu-latest

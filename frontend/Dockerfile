@@ -1,11 +1,11 @@
+# build env
 FROM node:21.7.1-alpine
 WORKDIR /app
-ENV PUBLIC_URL=/
+
 COPY package*.json ./
-RUN npm install --force
+RUN npm install
+
 COPY . ./
 RUN npm run build
-RUN mkdir -p /static && \
-    cp -r /app/build/* /static && \
-    mv /static/static/* /static/ && \
-    rm -rf /static/static
+
+CMD ["cp", "-r", "build", "result_build"]

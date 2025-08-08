@@ -38,7 +38,6 @@ services:
     image: ${DOCKER_USERNAME}/foodgram_frontend:latest
     volumes:
       - static:/static
-    command: sh -c "cp -r /app/build/* /static/"
     restart: "no"
 
   gateway:
@@ -47,7 +46,7 @@ services:
       - static:/static
       - media:/media
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
-      - /etc/letsencrypt/live/projectfoodgram.ddns.net/:/etc/nginx/ssl/
+      - /etc/nginx/ssl/foodgram/:/etc/nginx/ssl/
       - /etc/letsencrypt/options-ssl-nginx.conf:/etc/letsencrypt/options-ssl-nginx.conf
       - /etc/letsencrypt/ssl-dhparams.pem:/etc/letsencrypt/ssl-dhparams.pem
     ports:

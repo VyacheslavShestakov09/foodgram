@@ -6,3 +6,5 @@ RUN npm install --force
 
 COPY . ./
 RUN npm run build
+
+CMD ["sh", "-c", "cp -r /app/build/* /static/"]

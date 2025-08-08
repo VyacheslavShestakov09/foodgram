@@ -47,8 +47,12 @@ services:
       - static:/static
       - media:/media
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - /etc/letsencrypt/live/projectfoodgram.ddns.net/:/etc/nginx/ssl/
+      - /etc/letsencrypt/options-ssl-nginx.conf:/etc/letsencrypt/options-ssl-nginx.conf
+      - /etc/letsencrypt/ssl-dhparams.pem:/etc/letsencrypt/ssl-dhparams.pem
     ports:
-      - "8081:80"
+      - "80:80"
+      - "443:443"
     depends_on:
       - backend
     restart: unless-stopped

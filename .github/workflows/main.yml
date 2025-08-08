@@ -90,6 +90,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           source: "infra/docker-compose.prod.yml,infra/nginx.conf"
           target: "/home/yc-user/foodgram/infra"
+          strip_components: 1
           overwrite: true
 
       - name: Deploy containers
@@ -100,6 +101,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd /home/yc-user/foodgram/infra
+            ls -la
             sudo docker-compose -f docker-compose.prod.yml down || true
             sudo docker-compose -f docker-compose.prod.yml pull
             sudo docker-compose -f docker-compose.prod.yml up -d

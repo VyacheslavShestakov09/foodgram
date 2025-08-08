@@ -51,6 +51,7 @@ jobs:
           context: frontend/
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/foodgram_frontend:latest
+          no-cache: true
       
       - name: Build and push nginx image
         uses: docker/build-push-action@v4

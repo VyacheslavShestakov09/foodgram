@@ -33,7 +33,8 @@ services:
     image: ${DOCKER_USERNAME}/foodgram_frontend:latest
     volumes:
       - static:/static
-    command: ["sh", "-c", "cp -r /result_build/* /static && mv /static/static/* /static && rm -rf /static/static"
+    command: ["sh", "-c", "cp -r /result_build/* /static && mv /static/static/* /static && rm -rf /static/static"]
+
     restart: "no"
 
   gateway:

@@ -1,8 +1,12 @@
+import re
+
 from rest_framework import serializers
 
 from drf_extra_fields.fields import Base64ImageField
 
 from django.contrib.auth import authenticate
+from django.contrib.auth import get_user_model
+from django.contrib.auth.validators import UnicodeUsernameValidator
 
 from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
 from djoser.serializers import (
@@ -16,10 +20,32 @@ from recipes.models import Recipe
 
 class UserCreateSerializer(BaseUserCreateSerializer):
     """Сериализатор для создания пользователя"""
+    username = serializers.CharField(
+        max_length=150,
+        validators=[UnicodeUsernameValidator()],
+        help_text='Обязательно для заполнения'
+    )
+
     class Meta(BaseUserCreateSerializer.Meta):
         model = MyUser
-        fields = ('email', 'username', 'password', 'first_name', 'last_name')
+        fields = (
+            'id',
+            'email',
+            'username',
+            'password',
+            'first_name',
+            'last_name'
+        )
         extra_kwargs = {'password': {'write_only': True}}
+
+    def validate_username(self, value):
+        """Проверяем, что имя пользователя соответствует требованиям"""
+        if not re.match(r'^[\w.@+-]+$', value):
+            raise serializers.ValidationError(
+                'Имя пользователя может содержать только буквы,'
+                ' цифры и символы: @/./+/-/_'
+            )
+        return value
 
     def validate_password(self, value):
         """Проверяем, что пароль соответствует требованиям безопасности"""
@@ -145,14 +171,14 @@ class SubscriptionSerializer(serializers.ModelSerializer):
     def get_recipes(self, obj):
         """Получаем рецепты автора
         Если указано параметр recipes_limit, ограничиваем вывод"""
-        from recipes.serializers import RecipeReadSerializer
+        from recipes.serializers import RecipeShortSerializer
         request = self.context.get('request')
         recipes = Recipe.objects.filter(author=obj.author)
         limit = request.query_params.get('recipes_limit')
         if limit and limit.isdigit():
             recipes = recipes[:int(limit)]
 
-        return RecipeReadSerializer(
+        return RecipeShortSerializer(
             recipes,
             many=True,
             context=self.context

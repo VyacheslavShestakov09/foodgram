@@ -1,9 +1,9 @@
-from rest_framework.permissions import BasePermission
-
+from rest_framework.permissions import BasePermission, SAFE_METHODS
 
 
 class IsAuthorOrReadOnly(BasePermission):
-    """Разрешает редактирование только автору объекта.
+    """
+    Разрешает редактирование только автору объекта.
     Позволяет:
     - Чтение (GET, HEAD, OPTIONS) для всех
     - Изменение (PUT, PATCH, DELETE) только автору
@@ -18,33 +18,30 @@ class IsAuthorOrReadOnly(BasePermission):
     def has_object_permission(self, request, view, obj):
         """Проверяет, что пользователь является автором объекта"""
         return (
-            request.method in ('GET', 'HEAD', 'OPTIONS')
+            request.method in SAFE_METHODS
             or obj.author == request.user
         )
 
 
 class IsAdminOrReadOnly(BasePermission):
-    """Разрешает изменение только администраторам.
+    """
+    Разрешает изменение только администраторам.
     Позволяет:
     - Чтение для всех
     - Изменение только администраторам
     """
-
     def has_permission(self, request, view):
-        """Разрешает доступ только администраторам
-        или для GET/HEAD/OPTIONS запросов.
-        """
+        """Разрешает доступ администраторам или для безопасных методов"""
         return (
-            request.method in ('GET', 'HEAD', 'OPTIONS')
+            request.method in SAFE_METHODS
             or (request.user and request.user.is_staff)
         )
 
 
 class IsAuthenticatedAndOwner(BasePermission):
-    """Разрешает доступ только владельцу объекта.
-    Позволяет:
-    - Доступ только аутентифицированному владельцу
     """
-
+    Разрешает доступ только владельцу объекта.
+    Доступ возможен только для аутентифицированного владельца.
+    """
     def has_object_permission(self, request, view, obj):
         return obj.user == request.user

@@ -5,7 +5,6 @@ from rest_framework import serializers
 from drf_extra_fields.fields import Base64ImageField
 
 from django.contrib.auth import authenticate
-from django.contrib.auth import get_user_model
 from django.contrib.auth.validators import UnicodeUsernameValidator
 
 from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer

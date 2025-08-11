@@ -36,7 +36,6 @@ from users.serializers import (
 )
 from .permissions import (
     IsAuthorOrReadOnly,
-    IsAdminOrReadOnly,
 )
 from .filters import RecipeFilter, IngredientSearchFilter
 from .paginations import CustomPagination

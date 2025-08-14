@@ -1,8 +1,7 @@
 from django_filters import rest_framework as filters
-
 from rest_framework.filters import SearchFilter
 
-from recipes.models import Recipe, Tag
+from recipes.models import Recipe
 
 
 class RecipeFilter(filters.FilterSet):
@@ -12,10 +11,8 @@ class RecipeFilter(filters.FilterSet):
     - Фильтрации по избранному
     - Фильтрации по списку покупок
     """
-    tags = filters.ModelMultipleChoiceFilter(
-        field_name='tags__slug',
-        to_field_name='slug',
-        queryset=Tag.objects.all()
+    tags = filters.AllValuesMultipleFilter(
+        field_name='tags__slug'
     )
     is_favorited = filters.BooleanFilter(
         method='filter_is_favorited'
@@ -26,7 +23,7 @@ class RecipeFilter(filters.FilterSet):
 
     class Meta:
         model = Recipe
-        fields = ['author', 'tags']
+        fields = ('author', 'tags')
 
     def filter_is_favorited(self, queryset, name, value):
         """Фильтрует рецепты по избранному для текущего пользователя."""

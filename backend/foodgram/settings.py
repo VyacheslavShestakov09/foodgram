@@ -12,7 +12,9 @@ load_dotenv(BASE_DIR / '.env')
 
 SECRET_KEY = os.getenv('SECRET_KEY', get_random_secret_key())
 
-DEBUG = os.getenv('DEBUG', 'False').lower() in ('true', '1',)
+# DEBUG = os.getenv('DEBUG', 'False').lower() in ('true', '1',)
+
+DEBUG = True
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
@@ -98,11 +100,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-AUTH_USER_MODEL = 'users.MyUser'
+AUTH_USER_MODEL = 'users.User'
 
 AUTHENTICATION_BACKENDS = [
-    'users.auth_backends.EmailAuthBackend',
-    'django.contrib.auth.backends.ModelBackend',
+    'django.contrib.auth.backends.ModelBackend'
 ]
 
 LANGUAGE_CODE = 'ru-Ru'
@@ -141,7 +142,7 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend',
     ],
-    'DEFAULT_PAGINATION_CLASS': 'api.paginations.CustomPagination',
+    'DEFAULT_PAGINATION_CLASS': 'api.paginations.Pagination',
     'PAGE_SIZE': 6,
 }
 
@@ -155,9 +156,7 @@ DJOSER = {
         'user_create': ['rest_framework.permissions.AllowAny'],
     },
     'SERIALIZERS': {
-        'user_create': 'users.serializers.UserCreateSerializer',
-        'user': 'users.serializers.UserSerializer',
-        'current_user': 'users.serializers.UserSerializer',
-        'token_create': 'djoser.serializers.TokenCreateSerializer',
+        'user': 'api.users.serializers.UserSerializer',
+        'current_user': 'api.users.serializers.UserSerializer',
     }
 }

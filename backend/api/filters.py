@@ -1,4 +1,5 @@
 from django_filters import rest_framework as filters
+from django.db.models import Q
 from rest_framework.filters import SearchFilter
 
 from recipes.models import Recipe
@@ -56,14 +57,7 @@ class IngredientSearchFilter(SearchFilter):
         terms = self.get_search_terms(request)
         if not terms:
             return queryset
-
-        queryset_startswith = queryset.filter(
-            name__istartswith=terms[0]
-        )
-        queryset_contains = queryset.filter(
-            name__icontains=terms[0]
-        ).exclude(
-            name__istartswith=terms[0]
-        )
-
-        return queryset_startswith.union(queryset_contains)
+        return queryset.filter(
+            Q(name__istartswith=terms[0])
+            | Q(name__icontains=terms[0])
+        ).order_by('name')

@@ -89,7 +89,7 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
-          source: infra/docker-compose.prod.yml infra/nginx.conf
+          source: "${{ github.workspace }}/infra/docker-compose.prod.yml,${{ github.workspace }}/infra/nginx.conf"
           target: "/home/yc-user/foodgram/infra"
           overwrite: true
       - name: Deploy containers

@@ -89,11 +89,11 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
-          source: "infra/docker-compose.prod.yml,infra/nginx.conf"
+          source: |
+            infra/docker-compose.prod.yml
+            infra/nginx.conf
           target: "/home/yc-user/foodgram/infra"
-          strip_components: 1
           overwrite: true
-
       - name: Deploy containers
         uses: appleboy/ssh-action@master
         with:

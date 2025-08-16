@@ -89,7 +89,7 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
-          source: "infra/*"
+          source: "infra/docker-compose.prod.yml,infra/nginx.conf"
           target: "/home/yc-user/foodgram/infra"
           strip_components: 1
           overwrite: true

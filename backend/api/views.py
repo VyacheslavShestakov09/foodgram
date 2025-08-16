@@ -1,42 +1,40 @@
 from django.db.models import Sum
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet as DjoserUserViewSet
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import (
-    AllowAny,
-    IsAuthenticated,
-    IsAuthenticatedOrReadOnly,
+    AllowAny, IsAuthenticated,
+    IsAuthenticatedOrReadOnly
 )
-from rest_framework.response import Response\
+from rest_framework.response import Response
 
-from recipes.models import (
-    Recipe,
-    Tag,
-    Ingredient,
-    Favorite,
-    ShoppingCart,
-    RecipeIngredient,
-)
-from api.serializers import (
-    FavoriteSerializer,
-    RecipeShortSerializer,
-    ShoppingCartSerializer,
-    TagSerializer,
-    IngredientSerializer,
+from api.serializers.recipes import (
+    FavoriteSerializer, IngredientSerializer,
     RecipeReadSerializer,
     RecipeWriteSerializer,
-    UserSerializer,
-    SubscriptionSerializer,
-    SubscriptionCreateSerializer,
+    ShoppingCartSerializer,
+    TagSerializer
+)
+from api.serializers.users import (
     AvatarUpdateSerializer,
+    SubscriptionCreateSerializer,
+    SubscriptionSerializer, UserSerializer
+)
+from recipes.models import (
+    Favorite,
+    Ingredient,
+    Recipe,
+    RecipeIngredient,
+    ShoppingCart,
+    Tag
 )
 from users.models import Subscription, User
-from .permissions import IsAuthorOrReadOnly
-from .filters import RecipeFilter, IngredientSearchFilter
+
+from .filters import IngredientSearchFilter, RecipeFilter
 from .paginations import Pagination
+from .permissions import IsAuthorOrReadOnly
 
 
 class UserViewSet(DjoserUserViewSet):
@@ -82,10 +80,10 @@ class UserViewSet(DjoserUserViewSet):
             context={'request': request}
         )
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+        subscription = serializer.save()
         return Response(
             SubscriptionSerializer(
-                author,
+                subscription.author,
                 context={'request': request}
             ).data,
             status=status.HTTP_201_CREATED
@@ -100,7 +98,7 @@ class UserViewSet(DjoserUserViewSet):
             user=user,
             author=author
         ).delete()
-        if deleted_count == 0:
+        if not deleted_count:
             return Response(
                 {'Ошибка': 'Подписка не найдена'},
                 status=status.HTTP_400_BAD_REQUEST
@@ -221,7 +219,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             recipe=recipe
         ).delete()
 
-        if deleted_count == 0:
+        if not deleted_count:
             return Response(
                 {'detail': 'Рецепт не найден в избранном'},
                 status=status.HTTP_400_BAD_REQUEST
@@ -255,7 +253,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             user=request.user,
             recipe=recipe
         ).delete()
-        if deleted_count == 0:
+        if not deleted_count:
             return Response(
                 {'detail': 'Рецепт не найден в списке покупок'},
                 status=status.HTTP_400_BAD_REQUEST
@@ -271,57 +269,11 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def get_link(self, request, pk=None):
         """Получение короткой ссылки на рецепт"""
         recipe = self.get_object()
-        if not recipe.short_code:
-            recipe.short_code = recipe.generate_short_code()
-            recipe.save(update_fields=['short_code'])
         return Response(
             {'short-link': request.build_absolute_uri(
                 f'/r/{recipe.short_code}/'
             )},
             status=status.HTTP_200_OK)
-
-    def _handle_relation_action(
-            self,
-            model,
-            user,
-            pk,
-    ):
-        """Обрабатывает добавление/удаление связей (избранное, покупки)."""
-        recipe = get_object_or_404(Recipe, pk=pk)
-        relation = model.objects.filter(user=user, recipe=recipe)
-        if self.request.method == 'POST':
-            if relation.exists():
-                return Response(
-                    {'detail': 'Рецепт уже добавлен'},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-            if model == Favorite:
-                serializer = FavoriteSerializer(
-                    data={'user': user.id, 'recipe': recipe.id},
-                    context={'request': self.request}
-                )
-            else:
-                serializer = ShoppingCartSerializer(
-                    data={'user': user.id, 'recipe': recipe.id},
-                    context={'request': self.request}
-                )
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
-            recipe_serializer = RecipeShortSerializer(
-                recipe,
-                context={'request': self.request}
-            )
-            return Response(
-                recipe_serializer.data,
-                status=status.HTTP_201_CREATED
-            )
-        if not relation.exists():
-            return Response(
-                {'detail': 'Рецепт не найден'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        relation.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(
         detail=False,

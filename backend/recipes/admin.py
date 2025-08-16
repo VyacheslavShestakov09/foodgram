@@ -2,12 +2,12 @@ from django.contrib import admin
 from django.core.exceptions import ValidationError
 
 from .models import (
-    Tag,
+    Favorite,
     Ingredient,
     Recipe,
     RecipeIngredient,
-    Favorite,
-    ShoppingCart
+    ShoppingCart,
+    Tag
 )
 
 

@@ -55,64 +55,61 @@ POST /api/auth/token/login/
    }
 
 
-Ответ:
-   ```bash
-   {
-   "auth_token": "string"
-   }
+  Ответ:
+    {
+    "auth_token": "string"
+    }
 
 
-Регистрация пользователя
+  Регистрация пользователя
 
-POST /api/users/
+  POST /api/users/
 
-Запрос:
-   ```bash
-   {
-   "email": "vpupkin@yandex.ru",
-   "username": "vasya.pupkin",
-   "first_name": "Вася",
-   "last_name": "Иванов",
-   "password": "Qwerty123"
-   }
+  Запрос:
+    {
+    "email": "vpupkin@yandex.ru",
+    "username": "vasya.pupkin",
+    "first_name": "Вася",
+    "last_name": "Иванов",
+    "password": "Qwerty123"
+    }
 
 
-Ответ:
-   ```bash
-   {
-   "email": "vpupkin@yandex.ru",
-   "id": 1,
-   "username": "vasya.pupkin",
-   "first_name": "Вася",
-   "last_name": "Иванов"
-   }
+  Ответ:
+    {
+    "email": "vpupkin@yandex.ru",
+    "id": 1,
+    "username": "vasya.pupkin",
+    "first_name": "Вася",
+    "last_name": "Иванов"
+    }
 
-Список рецептов
+  Список рецептов
 
-GET /api/recipes/?page=1&limit=2
+  GET /api/recipes/?page=1&limit=2
 
-Ответ:
-   ```bash
-  {
-    "count": 123,
-    "previous": null,
-    "results": [
-      {
-        "id": 1,
-        "tags": [{"id": 1, "name": "Завтрак", "slug": "breakfast"}],
-        "author": {"id": 1, "username": "vasya", "email": "vpupkin@yandex.ru"},
-        "ingredients": [
-          {"id": 1, "name": "Картофель", "measurement_unit": "г", "amount": 100}
-        ],
-        "is_favorited": false,
-        "is_in_shopping_cart": false,
-        "name": "Жареная картошка",
-        "image": "Путь до изображения",
-        "text": "Очень вкусная картошка",
-        "cooking_time": 30
-      }
-    ]
-  }
+  Ответ:
+    {
+      "count": 123,
+      "previous": null,
+      "results": [
+        {
+          "id": 1,
+          "tags": [{"id": 1, "name": "Завтрак", "slug": "breakfast"}],
+          "author": {"id": 1, "username": "vasya", "email": "vpupkin@yandex.ru"},
+          "ingredients": [
+            {"id": 1, "name": "Картофель", "measurement_unit": "г", "amount": 100}
+          ],
+          "is_favorited": false,
+          "is_in_shopping_cart": false,
+          "name": "Жареная картошка",
+          "image": "Путь до изображения",
+          "text": "Очень вкусная картошка",
+          "cooking_time": 30
+        }
+      ]
+    }
+
 
 Так же БД можно наполнить подготовленными ингредиентами с помощью файла load_csv.py
 

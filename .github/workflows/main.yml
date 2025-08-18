@@ -92,6 +92,7 @@ jobs:
           source: "infra/docker-compose.prod.yml,infra/nginx.conf"
           target: "/home/yc-user/foodgram/infra"
           overwrite: true
+          strip_components: 1
       - name: Deploy containers
         uses: appleboy/ssh-action@master
         with:

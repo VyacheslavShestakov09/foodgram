@@ -42,7 +42,7 @@ services:
     volumes:
       - static:/static
       - media:/media
-      - ./infra/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
       - /etc/letsencrypt/live/projectfoodgram.ddns.net/fullchain.pem:/etc/nginx/ssl/fullchain.pem:ro
       - /etc/letsencrypt/live/projectfoodgram.ddns.net/privkey.pem:/etc/nginx/ssl/privkey.pem:ro
       - /etc/letsencrypt/options-ssl-nginx.conf:/etc/letsencrypt/options-ssl-nginx.conf:ro

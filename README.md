@@ -21,22 +21,23 @@
    ```bash
    git clone <url вашего репо>
    cd <папка проекта>
-Создайте файл .env на основе шаблона:
 
-bash
-cp .env.example .env
-Запустите проект:
+2. Создайте файл .env на основе шаблона:
+   ```bash
+   cp .env.example .env
 
-bash
 
-docker-compose -f docker-compose.prod.yml up -d --build
+3. Запустите проект:
+   ```bash
+   docker-compose -f docker-compose.prod.yml up -d --build
+
 Миграция и статика включена в docker-compose.prod.yml
 
-Создайте суперпользователя:
+4. Создайте суперпользователя:
 
-bash
+   ```bash
+   docker-compose -f docker-compose.prod.yml exec backend python manage.py createsuperuser
 
-docker-compose -f docker-compose.prod.yml exec backend python manage.py createsuperuser
 После этого проект будет доступен по адресу:
  http://localhost/
 
@@ -47,72 +48,75 @@ docker-compose -f docker-compose.prod.yml exec backend python manage.py createsu
 POST /api/auth/token/login/
 
 Запрос:
-
-{
-  "email": "vpupkin@yandex.ru",
-  "password": "Qwerty123"
-}
+   ```bash
+   {
+    "email": "vpupkin@yandex.ru",
+    "password": "Qwerty123"
+   }
 
 
 Ответ:
+   ```bash
+   {
+   "auth_token": "string"
+   }
 
-{
-  "auth_token": "string"
-}
 
- Регистрация пользователя
+Регистрация пользователя
 
 POST /api/users/
 
 Запрос:
-
-{
-  "email": "vpupkin@yandex.ru",
-  "username": "vasya.pupkin",
-  "first_name": "Вася",
-  "last_name": "Иванов",
-  "password": "Qwerty123"
-}
+   ```bash
+   {
+   "email": "vpupkin@yandex.ru",
+   "username": "vasya.pupkin",
+   "first_name": "Вася",
+   "last_name": "Иванов",
+   "password": "Qwerty123"
+   }
 
 
 Ответ:
+   ```bash
+   {
+   "email": "vpupkin@yandex.ru",
+   "id": 1,
+   "username": "vasya.pupkin",
+   "first_name": "Вася",
+   "last_name": "Иванов"
+   }
 
-{
-  "email": "vpupkin@yandex.ru",
-  "id": 1,
-  "username": "vasya.pupkin",
-  "first_name": "Вася",
-  "last_name": "Иванов"
-}
-
- Список рецептов
+Список рецептов
 
 GET /api/recipes/?page=1&limit=2
 
 Ответ:
+   ```bash
+  {
+    "count": 123,
+    "previous": null,
+    "results": [
+      {
+        "id": 1,
+        "tags": [{"id": 1, "name": "Завтрак", "slug": "breakfast"}],
+        "author": {"id": 1, "username": "vasya", "email": "vpupkin@yandex.ru"},
+        "ingredients": [
+          {"id": 1, "name": "Картофель", "measurement_unit": "г", "amount": 100}
+        ],
+        "is_favorited": false,
+        "is_in_shopping_cart": false,
+        "name": "Жареная картошка",
+        "image": "Путь до изображения",
+        "text": "Очень вкусная картошка",
+        "cooking_time": 30
+      }
+    ]
+  }
 
-{
-  "count": 123,
-  "previous": null,
-  "results": [
-    {
-      "id": 1,
-      "tags": [{"id": 1, "name": "Завтрак", "slug": "breakfast"}],
-      "author": {"id": 1, "username": "vasya", "email": "vpupkin@yandex.ru"},
-      "ingredients": [
-        {"id": 1, "name": "Картофель", "measurement_unit": "г", "amount": 100}
-      ],
-      "is_favorited": false,
-      "is_in_shopping_cart": false,
-      "name": "Жареная картошка",
-      "image": "Путь до изображения",
-      "text": "Очень вкусная картошка",
-      "cooking_time": 30
-    }
-  ]
-}
 Так же БД можно наполнить подготовленными ингредиентами с помощью файла load_csv.py
-bash
+
+ ```bash
 cd foodgram/backend
 python manage.py load_csv
 

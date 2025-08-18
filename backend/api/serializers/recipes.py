@@ -220,11 +220,7 @@ class FavoriteSerializer(serializers.ModelSerializer):
         fields = ('user', 'recipe')
 
     def validate(self, data):
-        """Проверка на добавление своего рецепта и дублирование"""
-        if data['user'] == data['recipe'].author:
-            raise serializers.ValidationError(
-                'Нельзя добавить свой рецепт в избранное'
-            )
+        """Проверка на дублирование"""
         if Favorite.objects.filter(
             user=data['user'],
             recipe=data['recipe']
@@ -251,11 +247,7 @@ class ShoppingCartSerializer(serializers.ModelSerializer):
         fields = ('user', 'recipe')
 
     def validate(self, data):
-        """Проверка на добавление своего рецепта и дублирование"""
-        if data['user'] == data['recipe'].author:
-            raise serializers.ValidationError(
-                'Нельзя добавить свой рецепт в список покупок'
-            )
+        """Проверка на дублирование"""
         if ShoppingCart.objects.filter(
             user=data['user'],
             recipe=data['recipe']

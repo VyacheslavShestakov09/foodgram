@@ -80,13 +80,12 @@ class UserViewSet(DjoserUserViewSet):
             context={'request': request}
         )
         serializer.is_valid(raise_exception=True)
-        subscription = serializer.save()
+        serializer.save()
         return Response(
             SubscriptionSerializer(
-                subscription.author,
-                context={'request': request}
-            ).data,
-            status=status.HTTP_201_CREATED
+                serializer.data,
+                status=status.HTTP_201_CREATED
+            )
         )
 
     @subscribe.mapping.delete
@@ -271,7 +270,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         recipe = self.get_object()
         return Response(
             {'short-link': request.build_absolute_uri(
-                f'/r/{recipe.short_code}/'
+                f'/r/{recipe.short_code}'
             )},
             status=status.HTTP_200_OK)
 

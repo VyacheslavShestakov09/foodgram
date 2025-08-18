@@ -24,7 +24,7 @@
 
 2. Создайте файл .env на основе шаблона:
    ```bash
-   cp .env.example .env
+   cp .env.example .env(должен лежать в по пути foodgram/infra/.env)
 
 
 3. Запустите проект:
@@ -42,17 +42,17 @@
  http://localhost/
 
 
-5.Примеры запросов и ответов
+5. Примеры запросов и ответов
 Получение токена авторизации
 
 POST /api/auth/token/login/
 
 Запрос:
    ```bash
-   {
+  {
     "email": "vpupkin@yandex.ru",
     "password": "Qwerty123"
-   }
+  }
 
 Ответ:
    ```bash
@@ -114,7 +114,7 @@ POST /api/auth/token/login/
     }
 
  --- 
- 
+
 Так же БД можно наполнить подготовленными ингредиентами с помощью файла load_csv.py
 
    ```bash 

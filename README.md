@@ -42,8 +42,8 @@
  http://localhost/
 
 
-Примеры запросов и ответов
- Получение токена авторизации
+5.Примеры запросов и ответов
+Получение токена авторизации
 
 POST /api/auth/token/login/
 
@@ -54,18 +54,19 @@ POST /api/auth/token/login/
     "password": "Qwerty123"
    }
 
+Ответ:
+   ```bash
+   {
+   "auth_token": "string"
+   }
 
-  Ответ:
-    {
-    "auth_token": "string"
-    }
 
+Регистрация пользователя
+   ```bash
+   POST /api/users/
 
-  Регистрация пользователя
-
-  POST /api/users/
-
-  Запрос:
+Запрос:
+   ```bash
     {
     "email": "vpupkin@yandex.ru",
     "username": "vasya.pupkin",
@@ -75,7 +76,8 @@ POST /api/auth/token/login/
     }
 
 
-  Ответ:
+Ответ:
+   ```bash
     {
     "email": "vpupkin@yandex.ru",
     "id": 1,
@@ -84,11 +86,12 @@ POST /api/auth/token/login/
     "last_name": "Иванов"
     }
 
-  Список рецептов
+Список рецептов
 
   GET /api/recipes/?page=1&limit=2
 
   Ответ:
+   ```bash
     {
       "count": 123,
       "previous": null,
@@ -110,12 +113,13 @@ POST /api/auth/token/login/
       ]
     }
 
-
+ --- 
+ 
 Так же БД можно наполнить подготовленными ингредиентами с помощью файла load_csv.py
 
- ```bash
-cd foodgram/backend
-python manage.py load_csv
+   ```bash 
+   cd foodgram/backend
+   python manage.py load_csv
 
 Автор
 

@@ -118,5 +118,6 @@ python manage.py load_csv
 
 Автор
 
+Домен проекта сейчас - https://projectfoodgram.ddns.net/recipes
 Разработчик: Вячеслав
 GitHub: https://github.com/VyacheslavShestakov09
